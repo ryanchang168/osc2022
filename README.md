@@ -23,6 +23,6 @@ repeat 3-5 to submit later homework/lab.
 ## Happy Coding ~
 
 
-GitHub account name : ryanchang168	
-Student ID : 310551096
-Your name : 張哲銓 
+GitHub account name : ryanchang168  
+Student ID : 310551096  
+Your name : 張哲銓
