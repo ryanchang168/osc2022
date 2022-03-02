@@ -45,7 +45,7 @@ void UART_init(){
     *AUX_MU_LCR_REG = 3;
     *AUX_MU_MCR_REG = 0;
     *AUX_MU_BAUD = 270;
-    *AUX_MU_IIR_REG = 6;  
+    *AUX_MU_IIR_REG = 0xC6;  
 
     register unsigned int r = *GPFSEL1;  // for gpio pin 10-19
     r &= ~((7<<12)|(7<<15)); // gpio14, gpio15
@@ -86,6 +86,15 @@ void UART_put(char *s){
         if(*s == '\n')
             UART_write('\r');
         UART_write(*s++);
+    }
+}
+
+void UART_hex(unsigned int c){
+    for(int i=28;i>=0;i-=4){
+        unsigned int n = (c>>i)&0XF;    // 4 bits from left to right
+
+        n += n>9?0X37:0X30;         // 0-9->'0'-'9', 10-15->'A'->'F';
+        UART_write(n);
     }
 }
 

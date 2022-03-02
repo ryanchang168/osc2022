@@ -6,6 +6,7 @@ void UART_init();
 char UART_read();
 void UART_write(unsigned int c);
 void UART_put(char *s);
+void UART_hex(unsigned int c);
 
 #endif
 

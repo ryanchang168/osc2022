@@ -1,5 +1,5 @@
 CC = aarch64-linux-gnu
-CFLAGS = -Wall -O2 -ffreestanding -nostdinc -nostdlib -nostartfiles
+CFLAGS = -Wall -g -O2 -ffreestanding -nostdinc -nostdlib -nostartfiles
 all: kernel8.img
 
 output/a.o: src/a.S
@@ -14,8 +14,14 @@ output/lib.o: src/lib.c
 output/UART.o: src/UART.c
 	${CC}-gcc ${CFLAGS} -c src/UART.c -o output/UART.o
 
-kernel8.img:  output/main.o output/UART.o output/a.o output/lib.o
-	${CC}-ld -Iinclude -T src/linker.ld -o kernel8.elf output/a.o output/main.o output/UART.o output/lib.o
+output/mailbox.o: src/mailbox.c
+	${CC}-gcc ${CFLAGS} -c src/mailbox.c -o output/mailbox.o
+
+output/reboot.o: src/reboot.c
+	${CC}-gcc ${CFLAGS} -c src/reboot.c -o output/reboot.o
+
+kernel8.img:  output/main.o output/UART.o output/a.o output/lib.o output/mailbox.o output/reboot.o
+	${CC}-ld -Iinclude -T src/linker.ld -o kernel8.elf output/a.o output/main.o output/UART.o output/lib.o output/mailbox.o output/reboot.o
 	${CC}-objcopy -O binary kernel8.elf kernel8.img
 
 clean:
@@ -24,3 +30,11 @@ clean:
 
 run:
 	qemu-system-aarch64 -M raspi3 -kernel kernel8.img -display none -s -S -serial null -serial stdio
+
+pi: 
+	cp kernel8.img nctuos/kernel8.img
+	genisoimage -o nctuos.img nctuos
+	sudo dd if=nctuos.img of=/dev/sdb
+
+
+
