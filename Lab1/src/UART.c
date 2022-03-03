@@ -1,6 +1,6 @@
 #include "../include/UART.h"
 
-#define physical_add 	 0x3F000000
+#define physical_add     0x3F000000
 
 // initialization
 #define AUXENB      ((volatile unsigned int*)(physical_add+0x00215004))
@@ -39,13 +39,13 @@
 #define GPPUDCLK1       ((volatile unsigned int*)(physical_add+0x0020009C))
 
 void UART_init(){
-	*AUXENB |= 1; 
+    *AUXENB |= 1; 
     *AUX_MU_CNTL_REG = 0;
     *AUX_MU_IER_REG = 0;  
     *AUX_MU_LCR_REG = 3;
     *AUX_MU_MCR_REG = 0;
     *AUX_MU_BAUD = 270;
-    *AUX_MU_IIR_REG = 0xC6;  
+    *AUX_MU_IIR_REG = 0xc6;  
 
     register unsigned int r = *GPFSEL1;  // for gpio pin 10-19
     r &= ~((7<<12)|(7<<15)); // gpio14, gpio15
@@ -55,30 +55,30 @@ void UART_init(){
     *GPPUD = 0;    // disable gpio pull up/down
     r=150; 
     while(r--)
-    	asm volatile("nop");
+        asm volatile("nop");
     *GPPUDCLK0 = (1<<14)|(1<<15);  // for gpio pin 14,15
     r=150; 
     while(r--) 
-    	asm volatile("nop");
+        asm volatile("nop");
     *GPPUDCLK0 = 0;        // flush GPIO setup
     *AUX_MU_CNTL_REG = 3;     
 }
 
 char UART_read(){
-	do{
-		asm volatile("nop");
-	} while(!(*AUX_MU_LSR_REG & 0x01));  // check ready filed
+    do{
+        asm volatile("nop");
+    } while(!(*AUX_MU_LSR_REG & 0x01));  // check ready filed
 
-	char c = (char)(*AUX_MU_IO_REG);
-	return c=='\r'?'\n':c;
+    char c = (char)(*AUX_MU_IO_REG);
+    return c=='\r'?'\n':c;
 }
 
 void UART_write(unsigned int c){
-	do{
-		asm volatile("nop");
-	} while(!(*AUX_MU_LSR_REG & 0x20));  // check transmitter empty filed
+    do{
+        asm volatile("nop");
+    } while(!(*AUX_MU_LSR_REG & 0x20));  // check transmitter empty filed
 
-	*AUX_MU_IO_REG = c;
+    *AUX_MU_IO_REG = c;
 }
 
 void UART_put(char *s){

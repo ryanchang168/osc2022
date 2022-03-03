@@ -15,7 +15,7 @@
 #define MAILBOX_TAG_GETBOARDREVISION 		0x10002
 #define MAILBOX_TAG_MEMADDSIZE		0x10006
 
-unsigned int __attribute__((aligned(16))) mailbox[8]; 
+unsigned int __attribute__((aligned(16))) mailbox[36]; 
 
 int Msg_passing(unsigned char channel){
 	unsigned int r = (((unsigned int)((unsigned long)&mailbox) & ~0X0F));  // reserve the last 4 bits
@@ -39,6 +39,8 @@ int Msg_passing(unsigned char channel){
 }
 
 void Board_revision(){
+	UART_init();
+
 	mailbox[0] = 7*4;	// buffer size
 	mailbox[1] = 0;		// request code
 	mailbox[2] = MAILBOX_TAG_GETBOARDREVISION;		// tag ID
@@ -51,6 +53,8 @@ void Board_revision(){
 }
 
 void Mem_add_size(){
+	UART_init();
+
 	mailbox[0] = 8*4;	// buffer size
 	mailbox[1] = 0;		// request code
 	mailbox[2] = MAILBOX_TAG_MEMADDSIZE;		// tag ID
