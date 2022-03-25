@@ -34,5 +34,5 @@ relocate:
     sub     w2, w2, #1       
     cbnz    w2, 3b      //if bss size > 0, go to loop
 
-4:  bl      __relocate_addr
+4:  bl      boot_main-0x20000
     b       1b

@@ -39,4 +39,6 @@ int boot_main(){
 	asm volatile ("mov x1, %0" : : "r" (0x80000));    // %0 is input oprand, that is "0x80000"
 	asm volatile ("mov x0, %0" : : "r" (dtb_base));   // load the original x0
     asm volatile ("br x1");   // branch to kernel
+
+	return 0;
 }
