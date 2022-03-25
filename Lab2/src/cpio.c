@@ -1,5 +1,7 @@
 #include "../include/cpio.h"
 
+unsigned long CPIO_BASE;
+
 void cpio_ls(){
 	Info info;
 	cpio_newc_header *header = (cpio_newc_header*)CPIO_BASE;

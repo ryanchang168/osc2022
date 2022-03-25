@@ -47,3 +47,5 @@ run:
 
 cpio:
 	qemu-system-aarch64 -M raspi3 -kernel build/kernel8.img -display none -serial null -serial stdio -initrd initramfs.cpio
+dtb:
+	qemu-system-aarch64 -M raspi3 -kernel build/kernel8.img -display none -serial null -serial stdio -initrd initramfs.cpio -dtb bcm2710-rpi-3-b-plus.dtb

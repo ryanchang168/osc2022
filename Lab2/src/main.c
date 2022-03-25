@@ -4,8 +4,12 @@
 #include "../include/reboot.h"
 #include "../include/cpio.h"
 #include "../include/malloc.h"
+#include "../include/dtb.h"
 
 void main(){
+	register unsigned long x0 asm("x0");
+	unsigned long dtb_base = x0;
+
 	UART_init();
 	//UART_read();
 	//UART_put("\r\ntest\r\n");
@@ -22,6 +26,8 @@ void main(){
 	UART_put("ARM memory size : ");
 	UART_hex(mailbox[6]);
 	UART_put("\r\n");
+	
+	fdt_traverse((fdt_header*)(dtb_base), initramfs_callback);
 
 	char str[10];
 	for(int i=0;i<10;i++)

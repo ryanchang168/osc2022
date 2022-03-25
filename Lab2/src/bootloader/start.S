@@ -11,7 +11,7 @@ _start:
     
 1:  wfe
     b       1b    // processor ID > 0, loop....
-    
+
     // set top of stack just before our code (stack grows to a lower address per AAPCS64)
 2:  ldr     x1, = __relocate_addr    
     mov     sp, x1

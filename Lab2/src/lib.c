@@ -30,3 +30,10 @@ unsigned int hex_to_dec(char size[], int n){
 
 	return ans;
 }
+
+int Strlen(char *str){
+	int ans = 0;
+	while(str[ans] != '\0')
+		ans++;
+	return ans;
+}

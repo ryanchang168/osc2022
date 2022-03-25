@@ -1,6 +1,8 @@
 #include "../include/UART.h"
 
 int boot_main(){
+	volatile unsigned long dtb_base;
+	asm volatile ("mov %0, x0" : "=r" (dtb_base));   // backup x0
 	UART_init();
 	UART_put("[Uartboot] Waiting for kernel image.\n\r");
 
@@ -35,5 +37,6 @@ int boot_main(){
 	UART_put("[Uartboot] Received all kernel image.\n\r");
 
 	asm volatile ("mov x1, %0" : : "r" (0x80000));    // %0 is input oprand, that is "0x80000"
-    asm volatile ("br x1");
+	asm volatile ("mov x0, %0" : : "r" (dtb_base));   // load the original x0
+    asm volatile ("br x1");   // branch to kernel
 }
