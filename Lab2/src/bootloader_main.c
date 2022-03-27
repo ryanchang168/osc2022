@@ -12,6 +12,7 @@ int boot_main(){
 	char start_code[5]="hello";
     for(int i=0; i<5; i++){
         char b = UART_read();
+		UART_write(b);
         if (b!=start_code[i]) 
             i--;
     }
