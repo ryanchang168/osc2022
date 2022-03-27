@@ -12,7 +12,7 @@ void main(){
 
 	UART_init();
 	//UART_read();
-	//UART_put("\r\ntest\r\n");
+	UART_put("\r\ntest\r\n");
 
 	Board_revision();
 	UART_put("Board revision : ");
@@ -52,11 +52,11 @@ void main(){
 			}
 			else if(Strncmp(str, "ls", 2)==0){
 				cpio_ls();
-				UART_write('#');
+				UART_put("# ");
 			}
 			else if(Strncmp(str, "cat", 3)==0){
 				cpio_cat();
-				UART_write('#');
+				UART_put("# ");
 			}
 			else if(Strncmp(str, "malloc", 6)==0){
 				simple_malloc(0);

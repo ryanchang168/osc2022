@@ -3,6 +3,7 @@
 unsigned long CPIO_BASE;
 
 void cpio_ls(){
+	UART_write('\r');
 	Info info;
 	cpio_newc_header *header = (cpio_newc_header*)CPIO_BASE;
 
@@ -10,7 +11,6 @@ void cpio_ls(){
 		parse_header(header, &info);
 		if(Strncmp(info.name, "TRAILER!!!", 10) == 0)
 			break;
-		
 		for(int i=0;i<info.namesize;i++)
 			UART_write(*(info.name+i));
 		UART_put("\r\n");
@@ -21,6 +21,7 @@ void cpio_ls(){
 }
 
 void cpio_cat(){
+	UART_write('\r');
 	Info info;
 	cpio_newc_header *header = (cpio_newc_header*)CPIO_BASE;
 
@@ -40,7 +41,7 @@ void cpio_cat(){
 	} while(c!='\n' && c!='\r');
 
 	//UART_put(pathname);
-
+	UART_write('\r');
 	while(1){
 		parse_header(header, &info);
 		//UART_put("Parsed");
@@ -63,6 +64,8 @@ void cpio_cat(){
 void parse_header(cpio_newc_header* header, Info *info){
 	//for(int i=0;i<6;i++)
 	//	UART_write(*(header->c_magic+i));
+	//UART_put(header->c_magic);
+	//UART_put("\r\n");
 	if(Strncmp(header->c_magic, "070701", 6) != 0){
 		//UART_put(header->c_magic);
 		return;
@@ -73,6 +76,10 @@ void parse_header(cpio_newc_header* header, Info *info){
 	ull file_size = hex_to_dec(header->c_filesize, 8);
 	ull header_size = sizeof(cpio_newc_header)+name_size;
 
+	/*UART_hex(cpio_aligned(header_size));
+	UART_write(' ');
+	UART_hex(cpio_aligned(file_size));
+	UART_write(' ');*/
 	info->name = ((char*)header)+sizeof(cpio_newc_header);
 	info->file = (char*)header+cpio_aligned(header_size);
 	info->next_header = ((cpio_newc_header*)(info->file+cpio_aligned(file_size)));
