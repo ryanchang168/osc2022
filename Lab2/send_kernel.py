@@ -1,7 +1,7 @@
 import sys
 import os
 from tqdm import tqdm
-
+import time
 
 def main(fd):
     path = "build/kernel8.img"
@@ -18,11 +18,14 @@ def main(fd):
     for b in kernel_size.to_bytes(4, "big"):
         print(b)
 
+    time.sleep(5)
     print("Sending kernel8.img(%d bytes) to %s ...\n" % (kernel_size, sys.argv[1]))
     progress = tqdm(total=kernel_size)
+    time.sleep(10)
 
     for i in range(0, kernel_size):
         tty.write(kernel_img.read())
+        time.sleep(1/100000)
         progress.update(1)
     
     tty.close()
