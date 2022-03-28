@@ -6,6 +6,16 @@
 #include "../include/malloc.h"
 #include "../include/dtb.h"
 
+void print_help(){
+	UART_put("\rhelp      : print this help menu.\n");
+	UART_put("\rhello     : print Hello World.\n");
+	UART_put("\rreboot	  : reboot the device.\n");
+	UART_put("\rls		: list the files in cpio archive.\n");
+	UART_put("\rcat		: display the specific file content.\n");
+	UART_put("\rmalloc    : allocate a continuous space of memory of strings\n\r");
+	return;
+}
+
 void main(){
 	register unsigned long x0 asm("x0");
 	unsigned long dtb_base = x0;
@@ -29,8 +39,8 @@ void main(){
 	
 	fdt_traverse((fdt_header*)(dtb_base), initramfs_callback);
 
-	char str[10];
-	for(int i=0;i<10;i++)
+	char str[100];
+	for(int i=0;i<100;i++)
 		str[i] = 0;
 	int idx = 0;
 	
@@ -42,8 +52,10 @@ void main(){
 		if(c != '\n')
 			str[idx++] = c;
 		else{
-			if(Strncmp(str, "help", 4)==0)
-				UART_put("\rhelp      : print this help menu\nhello     : print Hello World!\nreboot    : reboot the device\r\n# ");
+			if(Strncmp(str, "help", 4)==0){
+				print_help();
+				UART_put("# ");
+			}
 			else if(Strncmp(str, "hello", 5)==0)
 				UART_put("\rHello World!\r\n# ");
 			else if(Strncmp(str, "reboot", 6)==0){
@@ -59,12 +71,30 @@ void main(){
 				UART_put("# ");
 			}
 			else if(Strncmp(str, "malloc", 6)==0){
-				simple_malloc(0);
+				unsigned int tmp = 7, num = 0, j=0;
+				while(str[tmp] != ' ')
+					tmp++;
+				for(int i=7;i<tmp;i++){
+					num *= 10;
+					num += (str[i]-48);
+				}
+				
+				unsigned int len = idx-tmp-1;
+				//UART_hex(len);
+				char s[len];
+				for(int i=0;i<len;i++)
+					s[i] = 0;
+				for(int i=tmp+1;i<idx;i++)
+					s[j++] = str[i];
+
+				char *ptr = simple_malloc(num);
+				ptr = s;
+				UART_put(ptr);
 			}
 			else
 				UART_put("No such command!\n");
 
-			for(int i=0;i<10;i++)
+			for(int i=0;i<100;i++)
 				str[i] = 0;
 			idx = 0;
 		}
