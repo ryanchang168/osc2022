@@ -52,6 +52,7 @@ void main(){
 		if(c != '\n')
 			str[idx++] = c;
 		else{
+			UART_write('\r');
 			if(Strncmp(str, "help", 4)==0){
 				print_help();
 				UART_put("# ");
@@ -81,15 +82,17 @@ void main(){
 				
 				unsigned int len = idx-tmp-1;
 				//UART_hex(len);
-				char s[len];
+				char s[len+1];
 				for(int i=0;i<len;i++)
 					s[i] = 0;
 				for(int i=tmp+1;i<idx;i++)
 					s[j++] = str[i];
+				s[j] = '\n';
 
 				char *ptr = simple_malloc(num);
 				ptr = s;
-				UART_put(ptr);
+				for(int i=0;i<=len;i++)
+					UART_write(*(ptr+i));
 			}
 			else
 				UART_put("No such command!\n");
