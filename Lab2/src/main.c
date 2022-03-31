@@ -85,7 +85,7 @@ void main(){
 				char s[len+1];
 				for(int i=0;i<len;i++)
 					s[i] = 0;
-				for(int i=tmp+1;i<idx;i++)
+				for(int i=tmp;i<idx;i++)
 					s[j++] = str[i];
 				s[j] = '\n';
 
@@ -93,6 +93,7 @@ void main(){
 				ptr = s;
 				for(int i=0;i<=len;i++)
 					UART_write(*(ptr+i));
+				UART_put("\r\n# ");
 			}
 			else
 				UART_put("No such command!\n");

@@ -21,7 +21,7 @@ def main(fd):
     # time.sleep(5)
     print("Sending kernel8.img(%d bytes) to %s ...\n" % (kernel_size, sys.argv[1]))
     progress = tqdm(total=kernel_size)
-    time.sleep(10)
+    # time.sleep(10)
 
     for i in range(0, kernel_size):
         tty.write(kernel_img.read())
